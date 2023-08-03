@@ -1,0 +1,49 @@
+body {
+    font-family:Arial, Helvetica, sans-serif;
+    /* font-style: Medium 500; */
+    background-color:  #F6F5F1;
+    font-weight: bold
+}
+
+.sideBar {
+    margin: 16px 16px 0 251px;
+    display: flex;
+    flex-direction: column;
+  
+}
+
+.types {
+    margin: 64px 0 0 251px;
+}
+
+.card {
+
+    background-color: rgb(255, 255, 255);
+    /* padding: 10px 15px; */
+    border-radius: 12px;
+    top: 99px;
+    left: 251px;
+    width: 160px;
+    height: 42px;
+    margin: 8px 0 8px;
+    /* margin-left: 251px; */
+}
+
+.card:hover {
+    background-color: #DEF2DD;
+    cursor: pointer;
+
+}
+
+.card:checked {
+    background-color: #46AA42;
+}
+
+.productName {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 16px 11px;
+    
+
+
+}

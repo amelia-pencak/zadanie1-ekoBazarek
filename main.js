@@ -42,7 +42,6 @@ function filterVegeCategories() {
 
 
 function displayAllTypes() {
-  
   productsTypesArray.sort((type1, type2) => type1.name.localeCompare(type2.name));
   let sideMenulistHTML = "";
     for (var i = 0; i < productsTypesArray.length; i++) {
@@ -50,13 +49,6 @@ function displayAllTypes() {
                   <div class ="productType">${productsTypesArray[i].name}</div>
                   </div>`;
     }
-
-  // let sideMenulistHTML = productsTypesArray.map(function(type) {
-  //     return `<div class="sideMenuCard" id="${type.id}">
-  //                 <div class ="productType">${type.name}</div>
-  //             </div>`;
-  // })
-  // .join('');
   
   types.innerHTML = sideMenulistHTML;
 
@@ -72,32 +64,54 @@ function  categoryFilter(id) {
   productCategoriesArray.sort((type1, type2) => type1.name.localeCompare(type2.name));
   let listHTMLCategory = "";
   if(lastFilteredType == null || lastFilteredType != id) {
-  for (var i = 0; i < productCategoriesArray.length; i++) {
-      if(productCategoriesArray[i].type == id) {
-        listHTMLCategory += dispalyCategoryCard(i);
-      }
-    }
+
+    let filtrowaneKateg = productCategoriesArray.filter(category => category.type === id);
+    console.log(filtrowaneKateg);
+    listHTMLCategory += displayCategories(filtrowaneKateg);
+    
+
     if(lastFilteredType != id && lastFilteredType) {
       document.getElementById(lastFilteredType).classList.remove('active');
     } 
     document.getElementById(id).classList.add('active');
     lastFilteredType = id;
+    
   }
   else {
     for (var i = 0; i < productCategoriesArray.length; i++) {
         listHTMLCategory += dispalyCategoryCard(i);
     }
+    
     document.getElementById(id).classList.remove('active');
     lastFilteredType = null;
+
   }
-  return categories.innerHTML = listHTMLCategory;
+ categories.innerHTML = listHTMLCategory; 
+ addClickListenerToCategory();
 }
 
-function dispalyCategoryCard(i) {
-  return `<div class="mainContainerCard" >
-                      <img src="${productCategoriesArray[i].iconUrl}" alt="${productCategoriesArray[i].name}" class="categoryIcon">
-                      <div class ="productCategory">${productCategoriesArray[i].name}</div>
+function displayCategories(listaKategorii) {
+  let kategorie = "";
+  listaKategorii.forEach(element => {
+    kategorie += dispalyCategoryCard(element);
+  });
+  return kategorie;
+}
+
+function dispalyCategoryCard(data) {
+  if(typeof data === 'object') {
+    return `<div class="mainContainerCard" >
+                      <img src="${data.iconUrl}" alt="${data.name}" class="categoryIcon">
+                      <div class ="productCategory">${data.name}</div>
                       </div>`;
+  }
+  else {
+    return `<div class="mainContainerCard" >
+    <img src="${productCategoriesArray[data].iconUrl}" alt="${productCategoriesArray[data].name}" class="categoryIcon">
+    <div class ="productCategory">${productCategoriesArray[data].name}</div>
+    </div>`;
+  }
+
 }
 
 function displayAllCategories() {
@@ -123,8 +137,15 @@ async function fetchCategoryDetails() {
   try {
     const response = await fetch(`https://api-eko-bazarek.azurewebsites.net/api/products/01d5e2a0-1b34-4644-8205-506130e03b75`);
     const categoryData = await response.json();
-    console.log(categoryData);
-    alert(`Wybrano kategorię: ${categoryData.id}`);
+    
+    if(response.ok) {
+      console.log("ok");
+      alert(`Wybrano kategorię: ${categoryData.id}`);
+    }
+    else {
+      alert(response.status);
+      throw new Error("Błąd sieci!");
+    }
   } catch (error) {
     console.error("Error fetching category details:", error);
   }
